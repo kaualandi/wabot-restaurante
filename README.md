@@ -79,7 +79,7 @@ cd ..
 npm start
 ```
 
-Escaneie o QR Code como se estivesse conectando a ao whatsapp web e mande um `Olá` para o número que usou para escanear.
+Escaneie o QR Code como se estivesse conectando ao whatsapp web e mande um `Olá` para o número que usou para escanear.
 
 > Não se esqueça de verificar se o multidevices (Multiplos Dispositivos) está ativado em seu whatsapp.
 
