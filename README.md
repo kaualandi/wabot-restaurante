@@ -25,6 +25,7 @@ npm install
 Você precisará de um arquivo `.env` parecido com esse:
 ```env
 USING=DEVELOPMENT ENVIRONMENT VARIABLES
+MAINTENANCE_MODE=
 BASEURL_BOTINFORS=
 
 BASEURL_SERVER=
@@ -35,6 +36,7 @@ DB_HOST=
 ```
 Basta agora preencher os dados:
 - **USING:** é figurativo, apenas se mostrará qual variável está sendo usada, no caso de ter duas.
+- **MAINTENANCE_MODE:** é um flag que indica se o bot está em modo de manutenção, se `true` ele responderá avisando seu estado e não fará mais nada.
 - **BASEURL_BOTINFORS:** se você não alterar o script server do `package.json` será por padrão `http://localhost:3004`. É essencial para o funcionamento do bot.
 
 Os demais são dados do cliente, sendo assim não são necessários preencher.
