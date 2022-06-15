@@ -35,8 +35,8 @@ module.exports = msgHandler = async (client, message) => {
 
         console.log("FROM 	===>", pushname);
         console.log("FROM_ID 	===>", chat.id);
-        console.log("ARGUMENTS	===>", args);
-        console.log("BODY	===>", body);
+        console.log("ARGUMENTS	===>", isMedia ? `[${mimetype}]` :args);
+        console.log("BODY	===>", isMedia ? `[${mimetype}]` : body);
 
         if (isMaintenanceMode) {
             console.log("\x1b[1;31mMAINTENANCE_MODE ON! IGNORING\x1b[0m");
