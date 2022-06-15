@@ -64,7 +64,7 @@ steps.s0 = async function s0() {
     }
     return {
         next: "s1",
-        menssages: [allMenssages.hi(time), allMenssages.welcome(), allMenssages.talkToSomeone(), allMenssages.whatIsYourEmail(), intervalCheckPay.toString()]
+        menssages: [allMenssages.hi(time), allMenssages.welcome(), allMenssages.talkToSomeone(), allMenssages.whatIsYourEmail()]
     };
 }
 
