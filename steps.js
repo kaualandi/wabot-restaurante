@@ -136,7 +136,6 @@ steps.s2 = async function s2(chatId, body) {
         }
     } else if (body === "3") {
         const name = await getBotData(chatId, 'name');
-        console.log(name);
         if (name.error) {
             return {
                 next: "s2",
@@ -213,7 +212,6 @@ steps.s4 = async function s4(chatId, body) {
         } else {
             // const url = paymentLink.sandbox_url;
             const url = paymentLink.url;
-            console.log(url.substring(0, 20)+"...");
 
             // ! O CÓDIGO COMENTADO ABAIXO NÃO FOI TESTADO !
             let intervalTotalTime = 0;
@@ -221,7 +219,6 @@ steps.s4 = async function s4(chatId, body) {
                 const premium = await premiumStatus(userId);
                 let startAt = {};
                 premium.start_at != null ? startAt = reformatDate(premium.start_at) : startAt.isNow = false;
-                console.log(startAt);
                 if(startAt.isNow) {
                     clearInterval(checkPayment);
                     const expiredIn = reformatDate(premium.expired_in);

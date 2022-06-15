@@ -135,7 +135,6 @@ exports.premiumStatus = async function premiumStatus(userId) {
     const conn = await pool.getConnection();
     const rows = await conn.query('SELECT premuim, expired_in, start_at FROM users WHERE id = ?', [userId]);
     await conn.end();
-    console.log(rows[0]);
     return rows[0];
 }
 

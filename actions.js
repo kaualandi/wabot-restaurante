@@ -10,13 +10,11 @@ const feedbackCTL = {
 }
 
 function setNextStep(nextStep, id) {
-    console.log('nextStep', nextStep);
+    console.log('NEXT STEP	===>', nextStep);
     axios.patch(`${baseUrlBotInfors}/users/${id}`, {
         nextMassage: nextStep
     }).then((res) => {
-        console.log('new nextStep saved');
     }).catch((err) => {
-        console.log(err);
     });
 }
 
@@ -39,7 +37,6 @@ async function start(client, message, data) {
         console.log("chose to leave");
         const feedback = feedbackCTL;
         const menssages = feedback.menssages;
-        console.log("MENSSAGES	===>", menssages);
         menssages.forEach(async (menssage) => {
             await client.sendText(from, menssage);
             console.log("mensagem enviada");
@@ -48,7 +45,6 @@ async function start(client, message, data) {
     } else if (nextMassage === "") {
         const feedback = await steps["s0"]();
         const menssages = feedback.menssages;
-        console.log("MENSSAGES	===>", menssages);
         menssages.forEach(async (menssage) => {
             await client.sendText(from, menssage);
             console.log("mensagem enviada");
@@ -57,7 +53,6 @@ async function start(client, message, data) {
     } else {
         const feedback = await steps[nextMassage](chat.id, body);
         const menssages = feedback.menssages;
-        console.log("MENSSAGES	===>", menssages);
         menssages.forEach(async (menssage) => {
             await client.sendText(from, menssage);
             console.log("mensagem enviada");

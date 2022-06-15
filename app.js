@@ -6,7 +6,7 @@ require('dotenv').config()
 
 const start = async (client = new Client()) => {
     console.log('\x1b[1;32m✓ USING:',process.env.USING,'\x1b[0m');
-    console.log('[SERVER] Servidor iniciado!')
+    console.log('\x1b[1;32m[SERVER] Servidor iniciado!\x1b[0m')
 
         client.onStateChanged((state) => {
             console.log('[Status do cliente]', state)
