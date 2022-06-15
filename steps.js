@@ -2,6 +2,8 @@ const { getUserByEmail, setWppById, alterData, getBotData, getListPlans, getPlan
 const { sendText } = require('./standby');
 require('dotenv').config();
 
+const intervalCheckPay = process.env.INTERVAL_CHECK_PAY || 60000;
+
 function handleToBRL(currency) {
     if (isNaN(currency)) {
         return currency;
@@ -62,7 +64,7 @@ steps.s0 = async function s0() {
     }
     return {
         next: "s1",
-        menssages: [allMenssages.hi(time), allMenssages.welcome(), allMenssages.talkToSomeone(), allMenssages.whatIsYourEmail()]
+        menssages: [allMenssages.hi(time), allMenssages.welcome(), allMenssages.talkToSomeone(), allMenssages.whatIsYourEmail(), intervalCheckPay.toString()]
     };
 }
 
@@ -233,10 +235,10 @@ steps.s4 = async function s4(chatId, body) {
                         clearInterval(checkPayment);
                         await sendText(chatId, [allMenssages.lastAlertPay()])
                     }
-                    intervalTotalTime += 180000; //? 3 min
-                    console.log('+3 min');
+                    intervalTotalTime += intervalCheckPay; //? 1 min
+                    console.log('+1 min');
                 }
-            }, 180000); //? 3 min
+            }, intervalCheckPay); //? 1 min
 
             const name = await getBotData(chatId, 'name');
             return {

@@ -33,6 +33,7 @@ DB_NAME=
 DB_USER=
 DB_PASS=
 DB_HOST=
+INTERVAL_CHECK_PAY=
 ```
 Basta agora preencher os dados:
 - **USING:** é figurativo, apenas se mostrará qual variável está sendo usada, no caso de ter duas.
