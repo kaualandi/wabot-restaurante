@@ -51,7 +51,6 @@ module.exports = msgHandler = async (client, message) => {
                 console.log("USUÁRIO NÃO CADASTRADO");
                 actions.signup(client, message);
             } else {
-                console.log(err);
                 client.sendText(from, `Algo não se saiu bem, não consegui recuperar suas informações.\n${err}`);
             }
         });

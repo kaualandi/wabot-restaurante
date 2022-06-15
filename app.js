@@ -26,7 +26,7 @@ const start = async (client = new Client()) => {
             msgHandler(client, message)
 
         }))
-        
+        exports.client = client
 }
 
 create(options(true, start))

@@ -1,6 +1,6 @@
-_IGNORE_CleanBot
-.node-persist
+# node
 node_modules
+# end node
 
 # managed by open-wa
 **.data.json
@@ -10,3 +10,4 @@ node_modules
 
 # enviroment variables
 **.env**
+# end enviroment variables

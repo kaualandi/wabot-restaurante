@@ -2,10 +2,10 @@
   "users": [
     {
       "id": "5521999222644@c.us",
-      "userId": null,
-      "nextMassage": "s1",
-      "selected_plan": null,
-      "name": "",
+      "userId": "1140892",
+      "nextMassage": "s0",
+      "selected_plan": "6",
+      "name": "Kauã",
       "from": "5521999222644@c.us"
     }
   ]

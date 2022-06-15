@@ -99,6 +99,7 @@ exports.getListPlans = async function getListPlans() {
 
 // async function getPaymentLink(userId, planId, type) {
 exports.getPaymentLink = async function getPaymentLink(userId, planId, type) {
+    console.log(userId, planId, type);
     const data = qs.stringify({
         'userId': userId,
         'planId': planId,

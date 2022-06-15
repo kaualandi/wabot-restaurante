@@ -4,11 +4,10 @@ require('dotenv').config();
 
 const baseUrlBotInfors = process.env.BASEURL_BOTINFORS
 
-// (async function () {
-//     const feedback = await steps["s2"]('5521999222644@c.us', '2');
-//     console.log(feedback);
-// })()
-
+const feedbackCTL = {
+    next: "s0",
+    menssages: [`Você escolheu sair...\n\nNão sei por que está saindo, mas espero que não demore voltar.\nSe precisar de ajuda entre no nosso discord bit.ly/PlaySADiscord.`],
+}
 
 function setNextStep(nextStep, id) {
     console.log('nextStep', nextStep);
@@ -22,13 +21,31 @@ function setNextStep(nextStep, id) {
 }
 
 async function start(client, message, data) {
-    console.log('start function');
-    const { nextMassage, selected_plan, selected_payment_method, last_payment_method, credits, name } = data;
+    const { nextMassage } = data;
     
-    const { body, id, chat, from } = message;
+    const { chat, from } = message;
+    // ? For add client.reply() add "id" in to above defragment
+    let { body } = message;
+
+    body = body.toLowerCase().trim();
     
-    console.log('nextMassage', nextMassage);
-    if (nextMassage === "") {
+    console.log('STEP	===>', nextMassage);
+    if (body === 'sair') {
+        if (nextMassage === 's0') {
+            await client.sendText(from, 'Você já saiu...');
+            console.log("mensagem enviada");
+            return;
+        }
+        console.log("chose to leave");
+        const feedback = feedbackCTL;
+        const menssages = feedback.menssages;
+        console.log("MENSSAGES	===>", menssages);
+        menssages.forEach(async (menssage) => {
+            await client.sendText(from, menssage);
+            console.log("mensagem enviada");
+        });
+        setNextStep(feedback.next, chat.id);
+    } else if (nextMassage === "") {
         const feedback = await steps["s0"]();
         const menssages = feedback.menssages;
         console.log("MENSSAGES	===>", menssages);

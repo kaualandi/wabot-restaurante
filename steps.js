@@ -1,4 +1,5 @@
 const { getUserByEmail, setWppById, alterData, getBotData, getListPlans, getPlans, getPaymentLink, premiumStatus } = require('./fetch')
+const { sendText } = require('./standby');
 require('dotenv').config();
 
 function handleToBRL(currency) {
@@ -17,14 +18,14 @@ function reformatDate(dateStr) {
     return {
         date: date.toLocaleDateString('pt-br'),
         alreadyPassed: date < now,
-        isNow: date == now
+        isNow: date.getTime() == now.getTime()
     };
 }
 
 const allMenssages = {
     'hi': (time) => `Olá, ${time}.`,
-    'bye': (firtName) => `Obrigado e volte sempre, ${firtName}!\n\nNão se esqueça de participar de nossa comunidade no discord: bit.ly/PlaySADiscord.`,
-    'welcome': () => `Sou o robô assistente do *Play Series, Filmes e Animes*, posso te ajudar com sua assinatura.`,
+    'bye': (firtName) => `Obrigado e volte sempre, ${firtName}!\nNão se esqueça de participar de nossa comunidade no discord: bit.ly/PlaySADiscord.`,
+    'welcome': () => `Sou o robô assistente do *Play Series, Filmes e Animes*, posso te ajudar com sua assinatura.\n*_Caso queira sair desse atendimento, pode digitar "sair" a qualquer momento._*`,
     'register': () => `Caso não tenha cadastro se cadastre pelo app: bit.ly/PlaySA_DownloadApp e depois volte aqui para prosseguirmos.`,
     'talkToSomeone': () => `Se quiser conversar com alguém, isso é pelo nosso discord: bit.ly/PlaySADiscord.`,
     'whatIsYourEmail': () => `Diga-me, por favor, o seu e-mail cadastrado:`,
@@ -33,7 +34,7 @@ const allMenssages = {
     'howCanIHelp': () => `Escolha em que posso te ajudar:\n\n*1*: Fazer recarga.\n*2*: Consultar status premium.\n\nUtilize apenas números, por favor.`,
     'inexistentEmail': () => `Esse e-mail não pertence a ninguém. Caso não tenha uma conta, se cadastre pelo app: bit.ly/PlaySA_DownloadApp e depois volte aqui para prosseguirmos.`,
     'errorAxios': () => `Ops, algo deu errado, não consegui recuperar informações.\n`,
-    'plans': async () => `Quantos dias de PREMIUM você deseja adicionar?\n\n${await getListPlans()}\nUtilize apenas números, por favor.`,
+    'plans': async () => `Quantos dias de PREMIUM você deseja adicionar?\n\n${await getListPlans()}\n*0*: Voltar.\n\nUtilize apenas números, por favor.`,
     'expirePremium': () => `Seu premium expirou, faça uma recarga. Caso precise de ajuda entre em contato pelo discord: bit.ly/PlaySADiscord.`,
     'invalidOption': () => `Ops, parece que você não digitou uma opção válida.\nCertifique-se de utilizar apenas números, por favor.`,
     'premiumDaysRemaining': (date) => `Você é membro PREMIUM até ${date}.`,
@@ -42,10 +43,10 @@ const allMenssages = {
     'selectPayMethod': (payMethods) => `Qual método de pagamento você deseja utilizar?\n\n*1*: PIX (${payMethods.PIX}).\n*2*: Cartão de crédito (${payMethods.creditCard}).\n*3*: Boleto (${payMethods.bankSlip}).\n\n*0*: Voltar.\n\nUtilize apenas números, por favor.`,
     'paymentUrl': (url) => `Para finalizar o pagamento, clique no link abaixo:\n\n${url}`,
     'whileIWait': () => `Enquanto aguardo o pagamento, você pode continuar navegando dentre as opções.`,
-    'paymentSuccess': () => `Obrigado! Pagamento efetuado com sucesso!`,
+    'paymentSuccess': () => `Obrigado! Pagamento efetuado com sucesso! 🤩`,
     'alertPay': () => `Não se esqueça de pagar a renovação de sua assinatura com o link acima!`,
+    'lastAlertPay': () => `Até o momento, não conseguimos identificar o pagamento.\n\nAo realizar o pagamento pode entrar em contato conosco por aqui e escolher a opção 2 para verificar se seu plano está ativo.\nEm caso de problemas entre em contato com nosso suporte bit.ly/PlaySADiscord.`,
 };
-
 const steps = {};
 
 steps.s0 = async function s0() {
@@ -154,6 +155,12 @@ steps.s2 = async function s2(chatId, body) {
 }
 
 steps.s3 = async function s3(chatId, body) {
+    if (body === "0") {
+        return {
+            next: "s2",
+            menssages: [allMenssages.howCanIHelp()]
+        };
+    }
     const plans = await getPlans();
     if (plans.error) {
         return {
@@ -207,39 +214,29 @@ steps.s4 = async function s4(chatId, body) {
             console.log(url.substring(0, 20)+"...");
 
             // ! O CÓDIGO COMENTADO ABAIXO NÃO FOI TESTADO !
-            // let intervalTotalTime = 0;
-            // const checkPayment = setInterval(async () => {
-            //     const premium = await premiumStatus(userId);
-            //     const startAt = reformatDate(premium.start_at);
-            //     if(startAt.isNow) {
-            //         clearInterval(checkPayment);
-            //         const expiredIn = reformatDate(premium.expired_in);
-            //         return {
-            //             next: "s2",
-            //             menssages: [allMenssages.paymentSuccess(), allMenssages.premiumDaysRemaining(expiredIn.date), await allMenssages.plans()]
-            //         }
-            //     } else {
-            //         intervalTotalTime += 180000; //? 3 min
-            //         console.log('+3 min');
-            //         if (intervalTotalTime == 3600000) { //? 1 hour
-            //             return {
-            //                 next: "s2",
-            //                 menssages: [allMenssages.alertPay(), await allMenssages.plans()]
-            //             }
-            //         } else if (intervalTotalTime == 21600000) { //? 6 hours
-            //             return {
-            //                 next: "s2",
-            //                 menssages: [allMenssages.alertPay(), await allMenssages.plans()]
-            //             }
-            //         } else if (intervalTotalTime >= 86400000) { //? 1 day
-            //             clearInterval(checkPayment);
-            //             return {
-            //                 next: "s2",
-            //                 menssages: [allMenssages.alertPay(), await allMenssages.plans()]
-            //             }
-            //         }
-            //     }
-            // }, 9000); //? 180000 // 3 min // 9 sec
+            let intervalTotalTime = 0;
+            const checkPayment = setInterval(async () => {
+                const premium = await premiumStatus(userId);
+                let startAt = {};
+                premium.start_at != null ? startAt = reformatDate(premium.start_at) : startAt.isNow = false;
+                console.log(startAt);
+                if(startAt.isNow) {
+                    clearInterval(checkPayment);
+                    const expiredIn = reformatDate(premium.expired_in);
+                    await sendText(chatId, [allMenssages.paymentSuccess(), allMenssages.premiumDaysRemaining(expiredIn.date)]);
+                } else {
+                    if (intervalTotalTime == 540000) { //? 9 min
+                        console.log('9 minutos');
+                        await sendText(chatId, [allMenssages.alertPay()])
+                    } else if (intervalTotalTime == 1800000) { //? 30 min
+                        console.log('30 minutos');
+                        clearInterval(checkPayment);
+                        await sendText(chatId, [allMenssages.lastAlertPay()])
+                    }
+                    intervalTotalTime += 180000; //? 3 min
+                    console.log('+3 min');
+                }
+            }, 180000); //? 3 min
 
             const name = await getBotData(chatId, 'name');
             return {
