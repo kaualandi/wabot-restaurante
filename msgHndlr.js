@@ -57,6 +57,6 @@ module.exports = msgHandler = async (client, message) => {
         });
 
     } catch (err) {
-        console.log(("[ERROR]", "red"), err);
+        console.log("\x1b[1;31m[ERROR]\x1b[0m", err);
     }
 };
