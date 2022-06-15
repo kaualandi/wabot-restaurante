@@ -225,15 +225,15 @@ steps.s4 = async function s4(chatId, body) {
                     await sendText(chatId, [allMenssages.paymentSuccess(), allMenssages.premiumDaysRemaining(expiredIn.date)]);
                 } else {
                     if (intervalTotalTime == 540000) { //? 9 min
-                        console.log('9 minutos');
+                        console.log(`9 minutos => ${chatId}`);
                         await sendText(chatId, [allMenssages.alertPay()])
                     } else if (intervalTotalTime == 1800000) { //? 30 min
-                        console.log('30 minutos');
+                        console.log(`30 minutos => ${chatId}`);
                         clearInterval(checkPayment);
                         await sendText(chatId, [allMenssages.lastAlertPay()])
                     }
                     intervalTotalTime += intervalCheckPay; //? 1 min
-                    console.log('+1 min');
+                    console.log(`+1 min => ${chatId}`);
                 }
             }, intervalCheckPay); //? 1 min
 
