@@ -28,7 +28,7 @@ module.exports = msgHandler = async (client, message) => {
         };
 
         console.log("---------------------------------------");
-        console.log('DATE TIME:	===>', new Date().toLocaleString('pt-br'));
+        console.log('DATE TIME	===>', new Date().toLocaleString('pt-br'));
         if (isGroupMsg) {
             return console.log("\x1b[1;31mMENSSAGE GROUP. IGNORING\x1b[0m");
         }

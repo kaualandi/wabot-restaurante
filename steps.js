@@ -197,7 +197,19 @@ steps.s4 = async function s4(chatId, body) {
             menssages: [await allMenssages.plans()]
         };
     } else {
-        const selectedPaymentMethod = body == "1" ? "pix" : (body == "2" ? "boleto" : "normal");
+        let selectedPaymentMethod;
+        if(body == "1") {
+            selectedPaymentMethod = "pix";
+        } else if (body == "2"){
+            selectedPaymentMethod = "normal";
+        } else if (body == "3") {
+            selectedPaymentMethod = "boleto";
+        } else {
+            return {
+                next: "s3",
+                menssages: [allMenssages.invalidOption(), await allMenssages.plans()]
+            }
+        }
         const selectedPlan = await getBotData(chatId, "selected_plan");
         const userId = await getBotData(chatId, "userId");
 
