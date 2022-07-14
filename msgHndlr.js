@@ -42,20 +42,8 @@ module.exports = msgHandler = async (client, message) => {
             console.log("\x1b[1;31mMAINTENANCE_MODE ON! IGNORING\x1b[0m");
             return client.sendText(from, "🚧️ *Estou em manutenção.* 🚧️\n\nEstão trabalhando para que eu fique melhor,\nou para que algum problema seja resolvido. 😁\nVolte mais tarde, e tente novamente. 😉");
         }
-
-        axios.get(`${baseUrlBotInfors}/users/${chat.id}`).then((res) => {
-            const { data } = res;
-            console.log("USER	===> JÁ CADASTRADO");
-            actions.start(client, message, data);
-        }).catch((err) => {
-            if (err?.response?.status === 404) {
-                console.log("USER	===> NÃO CADASTRADO");
-                actions.signup(client, message);
-            } else {
-                client.sendText(from, `Algo não se saiu bem, não consegui recuperar suas informações.\n${err}`);
-            }
-        });
-
+        
+        actions.start(client, message);
     } catch (err) {
         console.log("\x1b[1;31m[ERROR]\x1b[0m", err);
     }

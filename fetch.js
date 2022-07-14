@@ -1,42 +1,12 @@
-const mariadb = require('mariadb');
 require('dotenv').config();
 const axios = require("axios");
-const qs = require('qs');
-
-const pool = mariadb.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
-    connectionLimit: 5
-});
 
 const baseUrlBotInfors = process.env.BASEURL_BOTINFORS
-const baseUrlServer = process.env.BASEURL_SERVER
 
-// async function getUserByEmail(email) {
-exports.getUserByEmail = async function getUserByEmail(email) {
-    const conn = await pool.getConnection();
-    const rows = await conn.query('SELECT * FROM users WHERE email = ?', [email]);
-    await conn.end();
-    return rows[0];
-}
-
-// async function setWppById(id, number) {
-exports.setWppById = async function setWppById(id, number) {
-    const conn = await pool.getConnection();
-    const rows = await conn.query('UPDATE users SET id_whatsapp = ? WHERE id = ?', [number, id]);
-    await conn.end();
-    return rows;
-}
-
-exports.alterData = async function alterData(key, value, id) {
-    return axios.patch(`${baseUrlBotInfors}/users/${id}`, {
-        [key]: value.toString()
-    }).then((res) => {
-        console.log(`data saved: ${key} -> ${value}`);
-    }
-    ).catch((err) => {
+exports.getUserByEmail = async (id) => {
+    return axios.get(`${baseUrlBotInfors}/email/${id}`).then((res) => {
+        return res.data;
+    }).catch((err) => {
         console.log(`error: ${err}`);
         return {
             error: true,
@@ -48,77 +18,33 @@ exports.alterData = async function alterData(key, value, id) {
     });
 }
 
-// async function getBotData(chatId, key) {
-exports.getBotData = async function getBotData(chatId, key) {
-    return axios.get(`${baseUrlBotInfors}/users/${chatId}`).then((res) => {
-        const { data } = res;
-        return data[key];
-    }).catch((err) => {
-        return {
-            error: true,
-            message: {
-                code: err.response?.status || err,
-                text: err.response?.statusText || ''
+exports.getUser = async (id) => {
+    return axios.get(`${baseUrlBotInfors}/users/${id}`).then((res) => {
+        return res.data;
+    }).catch(async (err) => {
+        if (err.response?.status === 404) {
+            const user = {
+                id: id,
+                step: 's0',
+                name: null,
+                email: null
             }
-        }
-    });
-}
+            return await axios.post(`${baseUrlBotInfors}/users/`, user).then((res) => {
+                console.log(`Usuário cadastrado!!!!!\n${res.data}`);
+                return res.data;
+            }).catch((err) => {
+                console.log(`error: ${err}`);
+                return {
+                    error: true,
+                    message: {
+                        code: err.response?.status || err,
+                        text: err.response?.statusText || ''
+                    }
+                }
+            });
 
-async function _getPlans() {
-    return axios.get(`${baseUrlServer}/plans.php`).then((res) => {
-        const { data } = res;
-        return data;
-    }).catch((err) => {
-        return {
-            error: true,
-            message: {
-                code: err.response?.status || err,
-                text: err.response?.statusText || ''
-            }
-        }
-    });
-}
-
-exports.getPlans = async function getPlans() {
-    const plans = await _getPlans();
-    return plans;
-}
-
-exports.getListPlans = async function getListPlans() {
-    const plans = await _getPlans();
-    if (plans.error) {
-        return plans
-    } else {
-        let textToSend = '';
-        plans.forEach((plan) => {
-            textToSend += `*${plan.id}*: ${plan.name}\n`;
-        });
-        return textToSend;
-    }
-}
-
-// async function getPaymentLink(userId, planId, type) {
-exports.getPaymentLink = async function getPaymentLink(userId, planId, type) {
-    const data = qs.stringify({
-        'userId': userId,
-        'planId': planId,
-        'type': type
-    });
-    var config = {
-        method: 'post',
-        url: `${baseUrlServer}/payment-url.php`,
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        data: data
-    };
-
-    return axios(config)
-        .then(function (response) {
-            // return JSON.stringify(response.data);
-            return response.data;
-        })
-        .catch(function (err) {
+        } else {
+            console.log(`error: ${err}`);
             return {
                 error: true,
                 message: {
@@ -126,18 +52,103 @@ exports.getPaymentLink = async function getPaymentLink(userId, planId, type) {
                     text: err.response?.statusText || ''
                 }
             }
-        });
+        }
+    });
 }
 
-// async function premiumStatus(userId) {
-exports.premiumStatus = async function premiumStatus(userId) {
-    const conn = await pool.getConnection();
-    const rows = await conn.query('SELECT premuim, expired_in, start_at FROM users WHERE id = ?', [userId]);
-    await conn.end();
-    return rows[0];
+exports.setNextStep = async (step, id) => {
+    return axios.patch(`${baseUrlBotInfors}/users/${id}`, { step: step }).then((res) => {
+        console.log(`data saved: step -> ${step}`);
+        return true;
+    }).catch((err) => {
+        console.log(`error: ${err}`);
+        return {
+            error: true,
+            message: {
+                code: err.response?.status || err,
+                text: err.response?.statusText || ''
+            }
+        }
+    });
 }
 
-// ;(async () => {
-//     const myGetUserByEmail = await getUserByEmail('luannbr004@gmail.com');
-//     console.log(myGetUserByEmail);
-// })();
+exports.alterData = async (key, value, id) => {
+    return axios.patch(`${baseUrlBotInfors}/users/${id}`, {
+        [key]: value.toString()
+    }).then((res) => {
+        console.log(`data saved: ${key} -> ${value}`);
+    }).catch((err) => {
+        console.log(`error: ${err}`);
+        return {
+            error: true,
+            message: {
+                code: err.response?.status || err,
+                text: err.response?.statusText || ''
+            }
+        }
+    });
+}
+
+exports.getCart = async function (id) {
+    return axios.get(`${baseUrlBotInfors}/cart/${id}`).then((res) => {
+        return res.data;
+    }).catch((err) => {
+        if (err.response?.status === 404) {
+            return []; // cart is empty
+        } else {
+            console.log(`error: ${err}`);
+            return {
+                error: true,
+                message: {
+                    code: err.response?.status || err,
+                    text: err.response?.statusText || ''
+                }
+            }
+        }
+    });
+}
+
+exports.getCartList = async function (id) {
+    const cart = await this.getCart(id);
+
+    if (cart.length > 0) {
+
+        const listItens = cart.map(async (item) => {
+            const productName = await this.getProductName(item.id);
+            const productPrice = await this.getProductPrice(item.id, item.quantity)
+            return `(${item.id}) ${productName} x${item.quantity}\ncada: ${productPrice[0]} - sub:${productPrice[1]}`
+        }).join('\n\n')
+
+        const totalPrice = cart.reduce(async (acc, item) => {
+            const subTotalPrice = await this.getProductPrice(item.id, item.quantity)[1];
+            acc + subTotalPrice;
+        })
+
+        return `Você possue ${cart.length} itens.\n${listItens}\n\nTotal: ${totalPrice}`;
+    } else {
+        return `Seu carrinho está vazio.`;
+    }
+}
+
+exports.getProduct = async (id) => {
+    return axios.get(`${baseUrlBotInfors}/products/${id}`).then((res) => {
+        return res.data;
+    }).catch((err) => {
+        console.log(`error: ${err}`);
+        return {
+            error: true,
+            message: {
+                code: err.response?.status || err,
+                text: err.response?.statusText || ''
+            }
+        }
+    });
+}
+
+exports.getProductName = async (id) => {
+    return await this.getProduct(id).name;
+}
+
+exports.getProductPrice = async (id) => {
+    return await this.getProduct(id).price;
+}

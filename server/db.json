@@ -2,11 +2,32 @@
   "users": [
     {
       "id": "5521999222644@c.us",
-      "userId": "1140892",
-      "nextMassage": "s0",
-      "selected_plan": "6",
+      "step": "s2",
       "name": "Kauã",
-      "from": "5521999222644@c.us"
+      "email": "kaualandi@hotmail.com"
+    },
+    {
+      "id": "5521973819817@c.us",
+      "step": "s1",
+      "name": "Kauã",
+      "email": "kaualandi@hotmail.com"
+    }
+  ],
+  "email": [
+    {
+      "name": "Kauã Landi",
+      "id": "kaualandi@hotmail.com"
+    }
+  ],
+  "cart": [
+    {
+      "id": "5521999222644@c.us",
+      "items": [
+        {
+          "id": 1,
+          "quantity": 3
+        }
+      ]
     }
   ]
 }
