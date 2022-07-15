@@ -13,7 +13,7 @@ module.exports = options = (headless, start) => {
         popup: 3012,
         multiDevice: true,
         defaultViewport: null,
-        sessionId: 'PlayAnimes',
+        sessionId: 'chatbot-delivery',
         headless: headless,
         qrTimeout: 0,
         authTimeout: 60,

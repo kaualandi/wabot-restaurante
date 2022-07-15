@@ -3,7 +3,7 @@ const axios = require("axios");
 
 const baseUrlBotInfors = process.env.BASEURL_BOTINFORS
 
-exports.getUserByEmail = async (id) => {
+async function getUserByEmail(id) {
     return axios.get(`${baseUrlBotInfors}/email/${id}`).then((res) => {
         return res.data;
     }).catch((err) => {
@@ -17,8 +17,9 @@ exports.getUserByEmail = async (id) => {
         }
     });
 }
+exports.getUserByEmail = getUserByEmail;
 
-exports.getUser = async (id) => {
+async function getUser(id) {
     return axios.get(`${baseUrlBotInfors}/users/${id}`).then((res) => {
         return res.data;
     }).catch(async (err) => {
@@ -55,8 +56,9 @@ exports.getUser = async (id) => {
         }
     });
 }
+exports.getUser = getUser
 
-exports.setNextStep = async (step, id) => {
+async function setNextStep(step, id) {
     return axios.patch(`${baseUrlBotInfors}/users/${id}`, { step: step }).then((res) => {
         console.log(`data saved: step -> ${step}`);
         return true;
@@ -71,8 +73,9 @@ exports.setNextStep = async (step, id) => {
         }
     });
 }
+exports.setNextStep = setNextStep;
 
-exports.alterData = async (key, value, id) => {
+async function alterData(key, value, id) {
     return axios.patch(`${baseUrlBotInfors}/users/${id}`, {
         [key]: value.toString()
     }).then((res) => {
@@ -87,11 +90,13 @@ exports.alterData = async (key, value, id) => {
             }
         }
     });
-}
+} exports.alterData = alterData;
 
-exports.getCart = async function (id) {
-    return axios.get(`${baseUrlBotInfors}/cart/${id}`).then((res) => {
-        return res.data;
+
+async function getCart(id) {
+    return axios.get(`${baseUrlBotInfors}/cart/`).then((res) => {
+        const cartItens = res.data.filter(item => item.userId === id);
+        return cartItens;
     }).catch((err) => {
         if (err.response?.status === 404) {
             return []; // cart is empty
@@ -107,31 +112,36 @@ exports.getCart = async function (id) {
         }
     });
 }
+exports.getCart = getCart;
 
-exports.getCartList = async function (id) {
-    const cart = await this.getCart(id);
+async function getCartList(id) {
+    const cartItens = await getCart(id);
+    if (cartItens.length > 0) {
+        const listItens = Promise.all(cartItens.map(async (item) => {
+            console.log("item", item);
+            const productName = await getProductName(item.productId);
+            const productPrice = await getProductPrice(item.productId, item.quantity);
 
-    if (cart.length > 0) {
+            console.log(`---- (${item.productId}) ${productName} x${item.quantity} cada: ${productPrice[0]} - sub:${productPrice[1]}`)
+            return `(${item.productId}) ${productName} x${item.quantity}\ncada: ${productPrice[0]} - sub:${productPrice[1]}`
+        }))
+        console.log("listItens typeof", await typeof listItens);
+            // ! POR QUE LISTITENS É UM OBJETO?
+        const totalPrice = "";
+        // const totalPrice = Promise.all(cartItens.reduce(async (acc, item) => {
+        //     const subTotalPrice = await getProductPrice(item.id, item.quantity)[1];
+        //     acc + subTotalPrice;
+        // }, 0))
 
-        const listItens = cart.map(async (item) => {
-            const productName = await this.getProductName(item.id);
-            const productPrice = await this.getProductPrice(item.id, item.quantity)
-            return `(${item.id}) ${productName} x${item.quantity}\ncada: ${productPrice[0]} - sub:${productPrice[1]}`
-        }).join('\n\n')
-
-        const totalPrice = cart.reduce(async (acc, item) => {
-            const subTotalPrice = await this.getProductPrice(item.id, item.quantity)[1];
-            acc + subTotalPrice;
-        })
-
-        return `Você possue ${cart.length} itens.\n${listItens}\n\nTotal: ${totalPrice}`;
+        return `Você possue ${cartItens.length} itens.\n${await listItens}\n\nTotal: ${await totalPrice}`;
     } else {
         return `Seu carrinho está vazio.`;
     }
 }
+exports.getCartList = getCartList;
 
-exports.getProduct = async (id) => {
-    return axios.get(`${baseUrlBotInfors}/products/${id}`).then((res) => {
+async function addToCart(productId, id, quantity) {
+    return axios.post(`${baseUrlBotInfors}/cart`, { productId: productId, userId: id, quantity: quantity }).then((res) => {
         return res.data;
     }).catch((err) => {
         console.log(`error: ${err}`);
@@ -144,11 +154,66 @@ exports.getProduct = async (id) => {
         }
     });
 }
+exports.addToCart = addToCart;
 
-exports.getProductName = async (id) => {
-    return await this.getProduct(id).name;
+async function removeLastItemToCart(id) {
+    return axios.get(`${baseUrlBotInfors}/cart/`).then(async (res) => {
+        const cartItems = res.data.filter(item => item.userId === id);
+        const idLastItem = cartItems[cartItems.length - 1].id;
+        const removeToCart = await axios.delete(`${baseUrlBotInfors}/cart/${idLastItem}`);
+        return removeToCart;
+    }).catch((err) => {
+        if (err.response?.status === 404) {
+            return []; // cart is empty
+        } else {
+            console.log(`error: ${err}`);
+            return {
+                error: true,
+                message: {
+                    code: err.response?.status || err,
+                    text: err.response?.statusText || ''
+                }
+            }
+        }
+    });
 }
+exports.removeLastItemToCart = removeLastItemToCart;
 
-exports.getProductPrice = async (id) => {
-    return await this.getProduct(id).price;
+async function getProduct(id) {
+    return axios.get(`${baseUrlBotInfors}/menu/${id}`).then((res) => {
+        return res.data;
+    }).catch((err) => {
+        if (err.response?.status === 404) {
+            return {}; // inexistent product
+        } else {
+            console.log(`error: ${err}`);
+            return {
+                error: true,
+                message: {
+                    code: err.response?.status || err,
+                    text: err.response?.statusText || ''
+                }
+            }
+        }
+    });
 }
+exports.getProduct = getProduct;
+
+async function getProductName(id) {
+    const product = await getProduct(id);
+    console.log("name",product.name);
+    return product.name;
+}
+exports.getProductName = getProductName;
+
+async function getProductPrice(id, qtd) {
+    const product = await getProduct(id);
+    const price = product.price;
+    console.log("price",price);
+    if (qtd) {
+        return [price, qtd * price];
+    } else {
+        return price;
+    }
+}
+exports.getProductPrice = getProductPrice;

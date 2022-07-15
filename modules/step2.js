@@ -1,20 +1,12 @@
 const path = require('path');
 const { setNextStep, getCartList } = require('../fetch');
-
-const messages = {
-    howCanIHelp: () => `Escolha uma das opções.\nUse apenas números.\n\n*1*: Olhar cardápio (PDF);\n*2*: Pedir produto;\n*3*: Ver carrinho;\n*4*: Alterar email;\n*5*: Fechar carrinho;\n*6*: Desistir.`,
-    whatIsYourEmail: () => `Diga-me, por favor, o seu e-mail cadastrado:`,
-    whatIsproductId: () => `Diga-me, por favor, o ID do produto:\n_Pode ser encontrado no cardápio._`,
-    invalidOption: () => `Ops, parece que você não digitou uma opção válida.\nCertifique-se de utilizar apenas números, por favor.`,
-    clt: () => `Você escolheu sair...\n\nNão sei por que está saindo, mas espero que não demore voltar.`,
-};
+const messages = require('./messages');
 
 const options = {
     1: async (client, message) => {
         const { from } = message;
         const menu = path.resolve(__dirname, '../media/menu.pdf');
-        // await client.sendFile(from, menu);
-        await client.sendText(from, `Não encontrei um cardápio, desculpe.`);
+        await client.sendFile(from, menu, "menu.pdf", "Cardápio");
         await setNextStep('s2', from);
         await client.sendText(from, messages.howCanIHelp());
         console.log("Mensagem enviada");
@@ -27,7 +19,8 @@ const options = {
     },
     3: async (client, message) => {
         const { from } = message;
-        await client.sendText(from, `Carrinho está vazio.`);
+        const cart = await getCartList(from);
+        await client.sendText(from, cart);
         await setNextStep('s2', from);
         await client.sendText(from, messages.howCanIHelp());
         console.log("Mensagem enviada");

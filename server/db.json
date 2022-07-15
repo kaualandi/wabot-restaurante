@@ -21,13 +21,75 @@
   ],
   "cart": [
     {
+      "productId": "01",
+      "userId": "5521999222644@c.us",
+      "quantity": 3,
+      "id": 1
+    },
+    {
+      "productId": "06",
+      "userId": "5521999222644@c.us",
+      "quantity": 1,
+      "id": 2
+    }
+  ],
+  "menu": [
+    {
+      "id": "01",
+      "name": "X-Burguer",
+      "price": 11.5
+    },
+    {
+      "id": "02",
+      "name": "X-Salada",
+      "price": 12.5
+    },
+    {
+      "id": "03",
+      "name": "X-Bacon",
+      "price": 13
+    },
+    {
+      "id": "04",
+      "name": "X-EGG",
+      "price": 13.5
+    },
+    {
+      "id": "05",
+      "name": "X-Frango",
+      "price": 13.5
+    },
+    {
+      "id": "06",
+      "name": "X-Tudo",
+      "price": 14.5
+    },
+    {
+      "id": "07",
+      "name": "X-Tudo de frango",
+      "price": 14.5
+    },
+    {
+      "id": "08",
+      "name": "Refrigerante lata",
+      "price": 4
+    },
+    {
+      "id": "09",
+      "name": "Refrigerante 600ml",
+      "price": 6
+    },
+    {
+      "id": "10",
+      "name": "Refrigerante 1 litro",
+      "price": 7
+    },
+    {
       "id": "5521999222644@c.us",
-      "items": [
-        {
-          "id": 1,
-          "quantity": 3
-        }
-      ]
+      "item": {
+        "id": 1,
+        "quantity": 3
+      }
     }
   ]
 }

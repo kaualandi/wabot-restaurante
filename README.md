@@ -12,10 +12,10 @@
 
 ## Instalando bot
 ```bash
-git clone https://github.com/kaualandi/wabot-atendimento.git
+git clone https://kaualandi@bitbucket.org/noclaftech/chatbot-restaurante.git
 ```
 ```bash
-cd wabot-atendimento
+cd chatbot-restaurante
 ```
 ```bash
 npm install
@@ -27,20 +27,11 @@ Você precisará de um arquivo `.env` parecido com esse:
 USING=DEVELOPMENT ENVIRONMENT VARIABLES
 MAINTENANCE_MODE=
 BASEURL_BOTINFORS=
-
-BASEURL_SERVER=
-DB_NAME=
-DB_USER=
-DB_PASS=
-DB_HOST=
-INTERVAL_CHECK_PAY=
 ```
 Basta agora preencher os dados:
 - **USING:** é figurativo, apenas se mostrará qual variável está sendo usada, no caso de ter duas.
 - **MAINTENANCE_MODE:** é um flag que indica se o bot está em modo de manutenção, se `true` ele responderá avisando seu estado e não fará mais nada.
 - **BASEURL_BOTINFORS:** se você não alterar o script server do `package.json` será por padrão `http://localhost:3004`. É essencial para o funcionamento do bot.
-
-Os demais são dados do cliente, sendo assim não são necessários preencher.
 
 ## Server
 > Eu disse acima da *BASEURL_SERVER*, pois bem, aqui vamos configura-lo.
@@ -90,19 +81,3 @@ Se quiser usar o pm2, execute:
 ```bash
 pm2 start index.js --name wabot-bot
 ```
-## Autor
-
-👤 **Kauã Landi**
-
-* Website: https://kaualf.netlify.app
-* Github: [@kaualandi](https://github.com/kaualandi)
-* LinkedIn: [@kaualandi](https://linkedin.com/in/kaualandi)
-* Instagram: [@kaua.landi](https://www.instagram.com/kaua.landi/)
-
-## 🤝 Contribuição
-
-Contribuições, problemas e solicitações de recursos são bem-vindos! <br/> Sinta-se à vontade para verificar a [página de problemas](https://github.com/kaualandi/wabot-atendimento/issues). Você também pode dar uma olhada na [página de contribuição](https://github.com/kaualandi/wabot-atendimento/pulls).
-
-## 🥰 Mostre seu apoio
-
-Dê uma ⭐️ se este projeto te ajudou!

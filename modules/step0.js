@@ -1,11 +1,5 @@
 const {setNextStep, getUser} = require('../fetch');
-
-const messages = {
-    hi: (time) => `Olá, ${time}.`,
-    welcome: (name) => `Certo, já te encontrei aqui, ${name}.`,
-    howCanIHelp: () => `Escolha uma das opções.\nUse apenas números.\n\n*1*: Olhar cardápio (PDF);\n*2*: Pedir produto;\n*3*: Ver carrinho;\n*4*: Alterar email;\n*5*: Fechar carrinho;\n*6*: Desistir.`,
-    whatIsYourEmail: () => `Diga-me, por favor, o seu e-mail cadastrado:`,
-};
+const messages = require('./messages');
 
 module.exports = async (client, message) => {
     const { from } = message;
