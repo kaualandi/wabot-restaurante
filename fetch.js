@@ -4,7 +4,7 @@ const axios = require("axios");
 const baseUrlBotInfors = process.env.BASEURL_BOTINFORS;
 
 const handleToBRL = (n) => {
-    return n.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}).trim();
+    return n.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).trim();
 }
 
 async function getUserByEmail(id) {
@@ -180,7 +180,7 @@ exports.removeLastItemToCart = removeLastItemToCart;
 
 async function dropCart(id) {
     const cartItens = await getCart(id);
-    if(cartItens.length > 0) {
+    if (cartItens.length > 0) {
         Promise.all(cartItens.map(async (item) => {
             return await axios.delete(`${baseUrlBotInfors}/cart/${item.id}`).then((res) => {
                 return true;
@@ -221,7 +221,7 @@ exports.getProduct = getProduct;
 
 async function getProductName(id) {
     const product = await getProduct(id);
-    console.log("name",product.name);
+    console.log("name", product.name);
     return product.name;
 }
 exports.getProductName = getProductName;
@@ -229,7 +229,7 @@ exports.getProductName = getProductName;
 async function getProductPrice(id, qtd) {
     const product = await getProduct(id);
     const price = product.price;
-    console.log("price",price);
+    console.log("price", price);
     if (qtd) {
         return [price, qtd * price];
     } else {
@@ -237,3 +237,48 @@ async function getProductPrice(id, qtd) {
     }
 }
 exports.getProductPrice = getProductPrice;
+
+async function getAddress(id) {
+    const user = await getUser(id);
+
+    return axios.get(`${baseUrlBotInfors}/email/${user.email}`).then((res) => {
+        return res.data.address;
+    }).catch((err) => {
+        if (err.response?.status === 404) {
+            return false; // inexistent email
+        } else {
+            console.log(`error: ${err}`);
+            return {
+                error: true,
+                message: {
+                    code: err.response?.status || err,
+                    text: err.response?.statusText || ''
+                }
+            }
+        }
+    });
+}
+exports.getAddress = getAddress;
+
+async function finishCart(id) {
+    const cart = await getCart(id);
+
+    const request = {
+        userId: id,
+        cart
+    }
+
+    return axios.post(`${baseUrlBotInfors}/request/`, request).then((res) => {
+        return true;
+    }).catch((err) => {
+        console.log(`error: ${err}`);
+        return {
+            error: true,
+            message: {
+                code: err.response?.status || err,
+                text: err.response?.statusText || ''
+            }
+        }
+    });
+}
+exports.finishCart = finishCart;

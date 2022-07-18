@@ -2,7 +2,7 @@
   "users": [
     {
       "id": "5521999222644@c.us",
-      "step": "s5",
+      "step": "s0",
       "name": "Kauã",
       "email": "kaualandi@hotmail.com"
     },
@@ -16,10 +16,29 @@
   "email": [
     {
       "name": "Kauã Landi",
-      "id": "kaualandi@hotmail.com"
+      "id": "kaualandi@hotmail.com",
+      "address": "Araguaia, n°185, Guaratiba, Rio de Janeiro - RJ. 23030-100"
+    },
+    {
+      "name": "Matheus Falcão",
+      "id": "eu@matheusfalcao.com",
+      "address": "Rua Quatrocentos e Seis, n°493, Rústico, Volta Redonda - RJ. 27262-430"
     }
   ],
-  "cart": [],
+  "cart": [
+    {
+      "productId": "10",
+      "userId": "5521999222644@c.us",
+      "quantity": 3,
+      "id": 1
+    },
+    {
+      "productId": "01",
+      "userId": "5521999222644@c.us",
+      "quantity": 5,
+      "id": 2
+    }
+  ],
   "menu": [
     {
       "id": "01",
@@ -78,5 +97,6 @@
         "quantity": 3
       }
     }
-  ]
+  ],
+  "requests": []
 }

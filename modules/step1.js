@@ -15,7 +15,7 @@ module.exports = async (client, message) => {
         console.log("Mensagem enviada");
     } else {
         const data = await getUserByEmail(email);
-        if (data) {
+        if (!data.error) {
             const { name } = data;
             const firtName = name.split(' ')[0];
             await alterData('name', firtName, from);

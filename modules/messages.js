@@ -11,7 +11,11 @@ module.exports = {
     invalidProduct: () => `O produto que você escolheu não existe.`,
     invalidProductQuantity: () => `A quantidade que você escolheu não é valida.`,
     heChooseProduct: (name, qtd) => `Você escolheu ${qtd} ${name}.`,
-    confirmProduct: () => `Isso está correto?\nUse apenas números.\n*1*: Sim.\n*2*: Não, voltar.`,
+    confirmProduct: () => `Isso está correto?\nUse apenas números.\n\n*1*: Sim.\n*2*: Não, voltar.`,
     whatElse: () => `Escolha uma das opções.\nUse apenas números.\n\n*1*: Escolher mais itens;\n*2*: Verificar carrinho;\n*3*: Esvaziar carrinho;\n*4*: Finalizar pedido;\n*5*: Desistir.`,
     dropedCart: () => `Esvaziamos o seu carrinho.`,
+    emptyCart: () => `Seu carrinho está vazio, não podes prosseguir. Por favor, preencha o carrinho com ao menos um item.`,
+    confirmFinish: () => `Deseja prosseguir com a compra com o carrinho dessa forma?\nUse apenas números.\n\n*1*: Sim.\n*2*: Não, voltar.`,
+    confirmAddress: (address, min) => `Vamos enviar para *${address}*.\nO tempo de espera é de em média ${min} minuto${min > 1 ? "s" : ""}.\nUse apenas números.\n\n*1*: Sim, prosseguir.\n*2*: Não, voltar.\n\n_Para alterar o endereço retorne ao site e faça a mudança._`,
+    success: () => `*Incrivel, seu pedido será preparado e em breve chegará no endereço informado.*\n\nO pagamento é feito no local, por dinheiro, pix ou cartão de credito nas bandeiras: Visa, Mastercard, Elo, Hipercard, Dines Club e American Express.\n\nAté breve.`,
 }
