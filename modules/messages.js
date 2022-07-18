@@ -1,7 +1,7 @@
 module.exports = {
     hi: (time) => `Olá, ${time}.`,
     welcome: (name) => `Certo, já te encontrei aqui, ${name}.`,
-    howCanIHelp: () => `Escolha uma das opções.\nUse apenas números.\n\n*1*: Olhar cardápio (PDF);\n*2*: Pedir produto;\n*3*: Ver carrinho;\n*4*: Alterar email;\n*5*: Fechar carrinho;\n*6*: Desistir.`,
+    howCanIHelp: () => `Escolha uma das opções.\nUse apenas números.\n\n*1*: Olhar cardápio (PDF);\n*2*: Pedir produto;\n*3*: Ver carrinho;\n*4*: Alterar email;\n*5*: Fechar carrinho;\n*6*: Esvaziar carrinho;\n*7*: Desistir.`,
     whatIsYourEmail: () => `Diga-me, por favor, o seu e-mail cadastrado:`,
     invalidEmail: () => `Ops, parece que você não digitou um e-mail válido.`,
     inexistentEmail: () => `Esse e-mail não possue cadastro.`,
@@ -13,4 +13,5 @@ module.exports = {
     heChooseProduct: (name, qtd) => `Você escolheu ${qtd} ${name}.`,
     confirmProduct: () => `Isso está correto?\nUse apenas números.\n*1*: Sim.\n*2*: Não, voltar.`,
     whatElse: () => `Escolha uma das opções.\nUse apenas números.\n\n*1*: Escolher mais itens;\n*2*: Verificar carrinho;\n*3*: Esvaziar carrinho;\n*4*: Finalizar pedido;\n*5*: Desistir.`,
+    dropedCart: () => `Esvaziamos o seu carrinho.`,
 }

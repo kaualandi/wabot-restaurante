@@ -1,7 +1,11 @@
 require('dotenv').config();
 const axios = require("axios");
 
-const baseUrlBotInfors = process.env.BASEURL_BOTINFORS
+const baseUrlBotInfors = process.env.BASEURL_BOTINFORS;
+
+const handleToBRL = (n) => {
+    return n.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}).trim();
+}
 
 async function getUserByEmail(id) {
     return axios.get(`${baseUrlBotInfors}/email/${id}`).then((res) => {
@@ -94,9 +98,8 @@ async function alterData(key, value, id) {
 
 
 async function getCart(id) {
-    return axios.get(`${baseUrlBotInfors}/cart/`).then((res) => {
-        const cartItens = res.data.filter(item => item.userId === id);
-        return cartItens;
+    return axios.get(`${baseUrlBotInfors}/cart/?userId=${id}`).then((res) => {
+        return res.data;
     }).catch((err) => {
         if (err.response?.status === 404) {
             return []; // cart is empty
@@ -117,23 +120,19 @@ exports.getCart = getCart;
 async function getCartList(id) {
     const cartItens = await getCart(id);
     if (cartItens.length > 0) {
-        const listItens = Promise.all(cartItens.map(async (item) => {
+        const _listItens = Promise.all(cartItens.map(async (item) => {
             console.log("item", item);
             const productName = await getProductName(item.productId);
             const productPrice = await getProductPrice(item.productId, item.quantity);
 
-            console.log(`---- (${item.productId}) ${productName} x${item.quantity} cada: ${productPrice[0]} - sub:${productPrice[1]}`)
-            return `(${item.productId}) ${productName} x${item.quantity}\ncada: ${productPrice[0]} - sub:${productPrice[1]}`
+            return `*${productName}* x${item.quantity}\n${productPrice[0]} - ${productPrice[1]}`
         }))
-        console.log("listItens typeof", await typeof listItens);
-            // ! POR QUE LISTITENS É UM OBJETO?
-        const totalPrice = "";
-        // const totalPrice = Promise.all(cartItens.reduce(async (acc, item) => {
-        //     const subTotalPrice = await getProductPrice(item.id, item.quantity)[1];
-        //     acc + subTotalPrice;
-        // }, 0))
+        // ! FIZ GAMBIARRA. EU SEI
+        const listItens = (await _listItens).toString().split(',').join("\n\n");
+        console.log("listItens typeof", typeof await listItens);
+        console.log("listItens", await listItens);
 
-        return `Você possue ${cartItens.length} itens.\n${await listItens}\n\nTotal: ${await totalPrice}`;
+        return `Você possue ${cartItens.length} itens.\n${await listItens}`;
     } else {
         return `Seu carrinho está vazio.`;
     }
@@ -178,6 +177,27 @@ async function removeLastItemToCart(id) {
     });
 }
 exports.removeLastItemToCart = removeLastItemToCart;
+
+async function dropCart(id) {
+    const cartItens = await getCart(id);
+    if(cartItens.length > 0) {
+        Promise.all(cartItens.map(async (item) => {
+            return await axios.delete(`${baseUrlBotInfors}/cart/${item.id}`).then((res) => {
+                return true;
+            }).catch((err) => {
+                console.log(`error: ${err}`);
+                return {
+                    error: true,
+                    message: {
+                        code: err.response?.status || err,
+                        text: err.response?.statusText || ''
+                    }
+                }
+            });
+        }))
+    }
+}
+exports.dropCart = dropCart;
 
 async function getProduct(id) {
     return axios.get(`${baseUrlBotInfors}/menu/${id}`).then((res) => {

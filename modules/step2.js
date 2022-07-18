@@ -1,5 +1,5 @@
 const path = require('path');
-const { setNextStep, getCartList } = require('../fetch');
+const { setNextStep, getCartList, dropCart } = require('../fetch');
 const messages = require('./messages');
 
 const options = {
@@ -36,11 +36,21 @@ const options = {
         await client.sendText(from, `Em desenvolvimento.`);
         await setNextStep('s2', from);
         await client.sendText(from, messages.howCanIHelp());
+        console.log("Mensagem enviada");
     },
     6: async (client, message) => {
         const { from } = message;
+        const cart = await dropCart(from);
+        await client.sendText(from, messages.dropedCart());
+        await setNextStep('s2', from);
+        await client.sendText(from, messages.howCanIHelp());
+        console.log("Mensagem enviada");
+    },
+    7: async (client, message) => {
+        const { from } = message;
         await setNextStep('s0', from);
         await client.sendText(from, messages.clt());
+        console.log("Mensagem enviada");
     }
 }
 

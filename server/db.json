@@ -2,7 +2,7 @@
   "users": [
     {
       "id": "5521999222644@c.us",
-      "step": "s2",
+      "step": "s5",
       "name": "Kauã",
       "email": "kaualandi@hotmail.com"
     },
@@ -19,20 +19,7 @@
       "id": "kaualandi@hotmail.com"
     }
   ],
-  "cart": [
-    {
-      "productId": "01",
-      "userId": "5521999222644@c.us",
-      "quantity": 3,
-      "id": 1
-    },
-    {
-      "productId": "06",
-      "userId": "5521999222644@c.us",
-      "quantity": 1,
-      "id": 2
-    }
-  ],
+  "cart": [],
   "menu": [
     {
       "id": "01",
