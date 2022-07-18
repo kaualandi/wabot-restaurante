@@ -9,5 +9,5 @@ node_modules
 # end managed by open-wa
 
 # enviroment variables
-**.env**
+# **.env**
 # end enviroment variables
