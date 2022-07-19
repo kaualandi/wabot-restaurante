@@ -1,4 +1,4 @@
-const { setNextStep, getProduct, removeLastItemToCart } = require('../fetch');
+const { setNextStep, removeLastItemToCart } = require('../fetch');
 const messages = require('./messages');
 
 const options = {

@@ -14,8 +14,6 @@ module.exports = async (client, message) => {
     } else if (hours >= 0 && hours < 12) {
         time = "bom dia"
     }
-
-    console.log('Cheguei aqui, linha 24');
     await client.sendText(from, messages.hi(time));
     console.log("Mensagem enviada");
     
@@ -31,13 +29,13 @@ module.exports = async (client, message) => {
             await client.sendText(from, messages.howCanIHelp());
             console.log("Mensagem enviada");
         } else {
-            await setNextStep('s1', from);
-            await client.sendText(from, messages.whatIsYourEmail());
+            await setNextStep('s2', from);
+            await client.sendText(from, messages.howCanIHelp());
             console.log("Mensagem enviada");
         }
     } else {
-        await setNextStep('s1', from);
-        await client.sendText(from, messages.whatIsYourEmail());
+        await setNextStep('s2', from);
+        await client.sendText(from, messages.howCanIHelp());
         console.log("Mensagem enviada");
     }
 }

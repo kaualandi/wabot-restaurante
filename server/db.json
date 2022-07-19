@@ -5,12 +5,6 @@
       "step": "s0",
       "name": "Kauã",
       "email": "kaualandi@hotmail.com"
-    },
-    {
-      "id": "5521973819817@c.us",
-      "step": "s1",
-      "name": "Kauã",
-      "email": "kaualandi@hotmail.com"
     }
   ],
   "email": [
@@ -27,16 +21,10 @@
   ],
   "cart": [
     {
-      "productId": "10",
-      "userId": "5521999222644@c.us",
-      "quantity": 3,
-      "id": 1
-    },
-    {
       "productId": "01",
       "userId": "5521999222644@c.us",
       "quantity": 5,
-      "id": 2
+      "id": 1
     }
   ],
   "menu": [

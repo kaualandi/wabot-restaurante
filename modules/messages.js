@@ -2,7 +2,7 @@ module.exports = {
     hi: (time) => `Olá, ${time}.`,
     welcome: (name) => `Certo, já te encontrei aqui, ${name}.`,
     howCanIHelp: () => `Escolha uma das opções.\nUse apenas números.\n\n*1*: Olhar cardápio (PDF);\n*2*: Pedir produto;\n*3*: Ver carrinho;\n*4*: Alterar email;\n*5*: Fechar carrinho;\n*6*: Esvaziar carrinho;\n*7*: Desistir.`,
-    whatIsYourEmail: () => `Diga-me, por favor, o seu e-mail cadastrado:`,
+    whatIsYourEmail: () => `Diga-me, por favor, o seu e-mail cadastrado:\n\nCaso não tenha conta, entre: register-bot-delivery.netlify.app`,
     invalidEmail: () => `Ops, parece que você não digitou um e-mail válido.`,
     inexistentEmail: () => `Esse e-mail não possue cadastro.`,
     whatIsproductId: () => `Diga-me, por favor, o ID do produto e, separando por um espaço, a quantidade:\nExemplo: \`\`\`01 3\`\`\`\nSendo 01 o produto e 3 a quantidade\n\n_O ID do produto pode ser encontrado no cardápio. Se quiser ver o cardápio digite "voltar"_`,
@@ -15,7 +15,7 @@ module.exports = {
     whatElse: () => `Escolha uma das opções.\nUse apenas números.\n\n*1*: Escolher mais itens;\n*2*: Verificar carrinho;\n*3*: Esvaziar carrinho;\n*4*: Finalizar pedido;\n*5*: Desistir.`,
     dropedCart: () => `Esvaziamos o seu carrinho.`,
     emptyCart: () => `Seu carrinho está vazio, não podes prosseguir. Por favor, preencha o carrinho com ao menos um item.`,
-    confirmFinish: () => `Deseja prosseguir com a compra com o carrinho dessa forma?\nUse apenas números.\n\n*1*: Sim.\n*2*: Não, voltar.`,
+    confirmFinish: () => `Deseja prosseguir com o carrinho dessa forma?\nUse apenas números.\n\n*1*: Sim.\n*2*: Não, voltar.`,
     confirmAddress: (address, min) => `Vamos enviar para *${address}*.\nO tempo de espera é de em média ${min} minuto${min > 1 ? "s" : ""}.\nUse apenas números.\n\n*1*: Sim, prosseguir.\n*2*: Não, voltar.\n\n_Para alterar o endereço retorne ao site e faça a mudança._`,
     success: () => `*Incrivel, seu pedido será preparado e em breve chegará no endereço informado.*\n\nO pagamento é feito no local, por dinheiro, pix ou cartão de credito nas bandeiras: Visa, Mastercard, Elo, Hipercard, Dines Club e American Express.\n\nAté breve.`,
 }
