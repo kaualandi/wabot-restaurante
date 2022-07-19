@@ -19,7 +19,6 @@ module.exports = async (client, message) => {
     
     const user = await getUser(from);
     
-    console.log(`User: ${user.id}`);
 
     if(user) {
         const { email, name } = user;

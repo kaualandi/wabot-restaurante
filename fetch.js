@@ -7,18 +7,22 @@ const handleToBRL = (n) => {
     return n.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).trim();
 }
 
+function handleError(error) {
+    console.log("ERROR 	===>", error);
+    return {
+        error: true,
+        message: {
+            code: error.response?.status || error,
+            text: error.response?.statusText || ''
+        }
+    }
+}
+
 async function getUserByEmail(id) {
     return axios.get(`${baseUrlBotInfors}/email/${id}`).then((res) => {
         return res.data;
     }).catch((err) => {
-        console.log(`error: ${err}`);
-        return {
-            error: true,
-            message: {
-                code: err.response?.status || err,
-                text: err.response?.statusText || ''
-            }
-        }
+        return handleError(err);
     });
 }
 exports.getUserByEmail = getUserByEmail;
@@ -35,28 +39,13 @@ async function getUser(id) {
                 email: null
             }
             return await axios.post(`${baseUrlBotInfors}/users/`, user).then((res) => {
-                console.log(`Usuário cadastrado!!!!!\n${res.data}`);
                 return res.data;
             }).catch((err) => {
-                console.log(`error: ${err}`);
-                return {
-                    error: true,
-                    message: {
-                        code: err.response?.status || err,
-                        text: err.response?.statusText || ''
-                    }
-                }
+                return handleError(err);
             });
 
         } else {
-            console.log(`error: ${err}`);
-            return {
-                error: true,
-                message: {
-                    code: err.response?.status || err,
-                    text: err.response?.statusText || ''
-                }
-            }
+            return handleError(err);
         }
     });
 }
@@ -67,14 +56,7 @@ async function setNextStep(step, id) {
         console.log(`data saved: step -> ${step}`);
         return true;
     }).catch((err) => {
-        console.log(`error: ${err}`);
-        return {
-            error: true,
-            message: {
-                code: err.response?.status || err,
-                text: err.response?.statusText || ''
-            }
-        }
+        return handleError(err);
     });
 }
 exports.setNextStep = setNextStep;
@@ -85,14 +67,7 @@ async function alterData(key, value, id) {
     }).then((res) => {
         console.log(`data saved: ${key} -> ${value}`);
     }).catch((err) => {
-        console.log(`error: ${err}`);
-        return {
-            error: true,
-            message: {
-                code: err.response?.status || err,
-                text: err.response?.statusText || ''
-            }
-        }
+        return handleError(err);
     });
 } exports.alterData = alterData;
 
@@ -104,14 +79,7 @@ async function getCart(id) {
         if (err.response?.status === 404) {
             return []; // cart is empty
         } else {
-            console.log(`error: ${err}`);
-            return {
-                error: true,
-                message: {
-                    code: err.response?.status || err,
-                    text: err.response?.statusText || ''
-                }
-            }
+            return handleError(err);
         }
     });
 }
@@ -121,7 +89,6 @@ async function getCartList(id) {
     const cartItens = await getCart(id);
     if (cartItens.length > 0) {
         const _listItens = Promise.all(cartItens.map(async (item) => {
-            console.log("item", item);
             const productName = await getProductName(item.productId);
             const productPrice = await getProductPrice(item.productId, item.quantity);
 
@@ -129,8 +96,6 @@ async function getCartList(id) {
         }))
         // ! FIZ GAMBIARRA. EU SEI
         const listItens = (await _listItens).toString().split(',').join("\n\n");
-        console.log("listItens typeof", typeof await listItens);
-        console.log("listItens", await listItens);
 
         return `Você possue ${cartItens.length} itens.\n${await listItens}`;
     } else {
@@ -143,14 +108,7 @@ async function addToCart(productId, id, quantity) {
     return axios.post(`${baseUrlBotInfors}/cart`, { productId: productId, userId: id, quantity: quantity }).then((res) => {
         return res.data;
     }).catch((err) => {
-        console.log(`error: ${err}`);
-        return {
-            error: true,
-            message: {
-                code: err.response?.status || err,
-                text: err.response?.statusText || ''
-            }
-        }
+        return handleError(err);
     });
 }
 exports.addToCart = addToCart;
@@ -165,14 +123,7 @@ async function removeLastItemToCart(id) {
         if (err.response?.status === 404) {
             return []; // cart is empty
         } else {
-            console.log(`error: ${err}`);
-            return {
-                error: true,
-                message: {
-                    code: err.response?.status || err,
-                    text: err.response?.statusText || ''
-                }
-            }
+            return handleError(err);
         }
     });
 }
@@ -185,14 +136,7 @@ async function dropCart(id) {
             return await axios.delete(`${baseUrlBotInfors}/cart/${item.id}`).then((res) => {
                 return true;
             }).catch((err) => {
-                console.log(`error: ${err}`);
-                return {
-                    error: true,
-                    message: {
-                        code: err.response?.status || err,
-                        text: err.response?.statusText || ''
-                    }
-                }
+                return handleError(err);
             });
         }))
     }
@@ -206,14 +150,7 @@ async function getProduct(id) {
         if (err.response?.status === 404) {
             return {}; // inexistent product
         } else {
-            console.log(`error: ${err}`);
-            return {
-                error: true,
-                message: {
-                    code: err.response?.status || err,
-                    text: err.response?.statusText || ''
-                }
-            }
+            return handleError(err);
         }
     });
 }
@@ -221,7 +158,6 @@ exports.getProduct = getProduct;
 
 async function getProductName(id) {
     const product = await getProduct(id);
-    console.log("name", product.name);
     return product.name;
 }
 exports.getProductName = getProductName;
@@ -229,7 +165,6 @@ exports.getProductName = getProductName;
 async function getProductPrice(id, qtd) {
     const product = await getProduct(id);
     const price = product.price;
-    console.log("price", price);
     if (qtd) {
         return [price, qtd * price];
     } else {
@@ -247,14 +182,7 @@ async function getAddress(id) {
         if (err.response?.status === 404) {
             return false; // inexistent email
         } else {
-            console.log(`error: ${err}`);
-            return {
-                error: true,
-                message: {
-                    code: err.response?.status || err,
-                    text: err.response?.statusText || ''
-                }
-            }
+            return handleError(err);
         }
     });
 }
@@ -271,14 +199,7 @@ async function finishCart(id) {
     return axios.post(`${baseUrlBotInfors}/request/`, request).then((res) => {
         return true;
     }).catch((err) => {
-        console.log(`error: ${err}`);
-        return {
-            error: true,
-            message: {
-                code: err.response?.status || err,
-                text: err.response?.statusText || ''
-            }
-        }
+        return handleError(err);
     });
 }
 exports.finishCart = finishCart;

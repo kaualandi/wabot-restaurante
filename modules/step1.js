@@ -21,7 +21,6 @@ module.exports = async (client, message) => {
             await alterData('name', firtName, from);
             await alterData('email', email, from);
             await client.sendText(from, messages.welcome(name));
-            console.log("tentando setar s2");
             await setNextStep('s2', from);
             await client.sendText(from, messages.howCanIHelp());
             console.log("Mensagem enviada");
